@@ -19,6 +19,6 @@ export class BuildSign extends Phaser.GameObjects.Sprite {
     }
     BuildHereUI() {
         this.DestroyOtherBuildHereMenus();
-        this.buildHere = new BuildHere(this.scene, this.x, this.y - 50, 'BuildHere',this);
+        this.buildHere = new BuildHere(this.scene, this.x, this.y - this.scene.buildHereYOffset, 'BuildHere',this);
     }
 }
