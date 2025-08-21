@@ -2,7 +2,7 @@ import { Start } from './scenes/Start.js';
 
 const config = {
     type: Phaser.AUTO,
-    title: 'Overlord Rising',
+    title: 'Network Defender 2',
     description: '',
     parent: 'game-container',
     width: 1280,
@@ -19,4 +19,3 @@ const config = {
 }
 
 new Phaser.Game(config);
-            
