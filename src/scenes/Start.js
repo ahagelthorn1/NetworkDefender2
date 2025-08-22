@@ -1,5 +1,6 @@
 import { BuildSign } from './BuildSign.js';
 import { Malware } from './Malware.js';
+import { Arrow } from './Arrow.js';
 export class Start extends Phaser.Scene {
 
     constructor() {
@@ -15,6 +16,7 @@ export class Start extends Phaser.Scene {
         this.load.spritesheet('NoButton', 'assets/pngs/NoButton.png', { frameHeight: 26, frameWidth: 26 });
         this.load.spritesheet('Turret', 'assets/pngs/Turret.png', {frameHeight:64, frameWidth:64 });
         this.load.spritesheet('Malware', 'assets/pngs/Malware.png',{frameHeight:94,frameWidth:62});
+        this.load.spritesheet('Arrow', 'assets/pngs/Arrow.png',{frameHeight:82, frameWidth:64});
     }
     defineBuildSigns() {
         const BuildSignCoordinates = [
@@ -90,6 +92,9 @@ export class Start extends Phaser.Scene {
     update(time, delta) {
         const speed = 50 * (delta / 1000);
         this.moveMalwares(speed);
+        for (let i = 0; i < this.Turrets.length; i++) {
+            this.Turrets[i].update(time,this.malwares);
+        }
     }
 
 }
