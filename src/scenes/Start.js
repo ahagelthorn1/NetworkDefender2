@@ -18,6 +18,37 @@ export class Start extends Phaser.Scene {
         this.load.spritesheet('Malware', 'assets/pngs/Malware.png',{frameHeight:94,frameWidth:62});
         this.load.spritesheet('Arrow', 'assets/pngs/Arrow.png',{frameHeight:82, frameWidth:64});
         this.load.spritesheet('HealthBar', 'assets/pngs/HealthBar.png', {frameHeight:32,frameWidth:64});
+        //Setpieces
+        this.load.spritesheet('BigBush', 'assets/pngs/BigBush.png', {frameHeight:64,frameWidth:64});
+        this.load.spritesheet('BigRock', 'assets/pngs/BigRock.png', {frameHeight:64,frameWidth:64});
+        this.load.spritesheet('Flowers1', 'assets/pngs/Flowers1.png', {frameHeight:64, frameWidth:64});
+        this.load.spritesheet('Flowers2', 'assets/pngs/Flowers2.png', {frameHeight:64, frameWidth:64});
+        this.load.spritesheet('Flowers3', 'assets/pngs/Flowers3.png',
+        {frameHeight:64, frameWidth:64});
+        this.load.spritesheet('Flowers4', 'assets/pngs/Flowers4.png',
+        {frameHeight:64, frameWidth:64});
+        this.load.spritesheet('Grass1', 'assets/pngs/Grass1.png', {frameHeight:64, frameWidth:64});
+        this.load.spritesheet('Grass2', 'assets/pngs/Grass2.png',
+        {frameHeight:64, frameWidth:64});
+        this.load.spritesheet('Grass3', 'assets/pngs/Grass3.png',
+        {frameHeight:64, frameWidth:64});
+        this.load.spritesheet('Lily1', 'assets/pngs/Lily1.png', {frameHeight:64, frameWidth:64});
+        this.load.spritesheet('Lily2', 'assets/pngs/Lily2.png', {frameHeight:64, frameWidth:64});
+        this.load.spritesheet('Lily3', 'assets/pngs/Lily3.png', {frameHeight:64, frameWidth:64});
+        this.load.spritesheet('Logs', 'asssets/pngs/Logs.png',
+        {frameHeight:64, frameWidth:64});
+        this.load.spritesheet('Reeds1', 'assets/pngs/Reeds1.png', {frameHeight:64, frameWidth:64});
+        this.load.spritesheet('Reeds2', 'assets/pngs/Reeds2.png', {frameHeight:64, frameWidth:64});
+        this.load.spritesheet('RightRock', 'assets/pngs/RightRock.png',{frameHeight:64, frameWidth:64});
+        this.load.spritesheet('SlantLog', 'assets/pngs/SlantLog.png', {frameHeight:64, frameWidth:64});
+        this.load.spritesheet('SmallBush', 'assets/pngs/SmallBush.png',{frameHeight:64, frameWidth:64});
+        this.load.spritesheet('UpLog', 'assets/pngs/UpLog.png',{frameHeight:64,frameWidth:64});
+        this.load.spritesheet('VioletFlower', 'assets/pngs/VioletFlower.png', {frameHeight:64, frameWidth:64});
+        this.load.spritesheet('WhiteFlower', 'assets/pngs/WhiteFlower.png',{frameHeight:64, frameWidth:64});
+        this.load.spritesheet('YellowFlower', 'assets/pngs/YellowFlower.png',{frameHeight:64, frameWidth:64});
+        this.load.spritesheet('Fence', 'assets/pngs/Fence.png', {frameHeight:76, frameWidth:230});
+        this.load.spritesheet('HugeRocks', 'assets/pngs/HugeRocks.png', {frameHeight:202, FrameWidth:60});
+
     }
     defineBuildSigns() {
         const BuildSignCoordinates = [
