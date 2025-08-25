@@ -119,13 +119,15 @@ export class Turret extends Phaser.GameObjects.Sprite {
         let closestDist = this.range;
         for(let i = 0; i < enemies.length; i++) {
             let enemy = enemies[i];
-            const dist = Phaser.Math.Distance.Between(
-                this.x, this.y, enemy.x, enemy.y
-            );
+            if (enemy.y < 720) {
+                const dist = Phaser.Math.Distance.Between(
+                    this.x, this.y, enemy.x, enemy.y
+                );
 
-            if (dist < closestDist) {
-                closestDist = dist;
-                target = enemy;
+                if (dist < closestDist) {
+                    closestDist = dist;
+                    target = enemy;
+                }
             }
         }
         if (target && time > this.lastFired + this.fireRate) {

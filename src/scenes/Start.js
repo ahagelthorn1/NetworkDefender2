@@ -17,6 +17,7 @@ export class Start extends Phaser.Scene {
         this.load.spritesheet('Turret', 'assets/pngs/Turret.png', {frameHeight:64, frameWidth:64 });
         this.load.spritesheet('Malware', 'assets/pngs/Malware.png',{frameHeight:94,frameWidth:62});
         this.load.spritesheet('Arrow', 'assets/pngs/Arrow.png',{frameHeight:82, frameWidth:64});
+        this.load.spritesheet('HealthBar', 'assets/pngs/HealthBar.png', {frameHeight:32,frameWidth:64});
     }
     defineBuildSigns() {
         const BuildSignCoordinates = [
