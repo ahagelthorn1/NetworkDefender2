@@ -7,6 +7,7 @@ import { Gold } from './Gold.js';
 import { LevelBar } from './LevelBar.js';
 import { WaveBar } from './WaveBar.js';
 import { XPBar } from './XPBar.js';
+import { BeginWave } from './BeginWave.js';
 
 export class Start extends Phaser.Scene {
 
@@ -64,6 +65,7 @@ export class Start extends Phaser.Scene {
         this.load.spritesheet('Gold','assets/pngs/Gold.png',{frameHeight:32,frameWidth:104});
         this.load.spritesheet('WaveBar','assets/pngs/WaveBar.png',{frameHeight:32,frameWidth:144});
         this.load.spritesheet('XPBar', 'assets/pngs/XPBar.png', {frameHeight:18, frameWidth:10});
+        this.load.spritesheet('BeginWave', 'assets/pngs/BeginWave.png', {frameHeight:16, frameWidth:64});
 
     }
     defineBuildSigns() {
@@ -312,10 +314,41 @@ export class Start extends Phaser.Scene {
     }
     establishUI() {
         this.Health = new Health(this,50,50,'Health');
+        this.Health.healthValue = 3;
         this.Gold = new Gold(this, 170,50, 'Gold');
+        this.Gold.goldValue = 100;
         this.LevelBar = new LevelBar(this, 290,50,'LevelBar');
+        this.LevelBar.levelValue = 1;
         this.WaveBar = new WaveBar(this, 90, 120, 'WaveBar');
+        this.WaveBar.waveValue = 1;
         this.XPBar = new XPBar(this, 320, 50, 'XPBar');
+        this.XPBar.XPValue = 0;
+        this.Begin = new BeginWave(this, 720, 690, 'BeginWave');
+        this.Begin.scale = 3;
+    }
+    getHealth() {
+        return this.Health.healthValue;
+    }
+    setHealth(value) {
+        this.Health.changeHealthValue(value);
+    }
+    getGold() {
+        return this.Gold.goldValue;
+    }
+    setGold(value) {
+        this.Gold.changeGold(value);
+    }
+    getWave() {
+        return this.WaveBar.waveValue;
+    }
+    advanceWave() {
+        this.WaveBar.advanceWave();
+    }
+    getXP() {
+        return this.XPBar.XPValue;
+    }
+    setXP(value) {
+        this.XPBar.setXP(value);
     }
     create() {
         const STARTING_GOLD = 120;
@@ -333,10 +366,12 @@ export class Start extends Phaser.Scene {
     }
 
     update(time, delta) {
-        const speed = 50 * (delta / 1000);
-        this.moveMalwares(speed);
-        for (let i = 0; i < this.Turrets.length; i++) {
-            this.Turrets[i].update(time, this.malwares);
+        if (this.WaveBar.waveInProgress) {
+            const speed = 50 * (delta / 1000);
+            this.moveMalwares(speed);
+            for (let i = 0; i < this.Turrets.length; i++) {
+                this.Turrets[i].update(time, this.malwares);
+            }
         }
     }
 

@@ -5,7 +5,9 @@ export class BuildSign extends Phaser.GameObjects.Sprite {
         scene.add.existing(this);
         this.setInteractive();
         this.on('pointerdown', () => {
-            this.BuildHereUI();
+            if (this.scene.Gold.goldValue >= 50) {
+                this.BuildHereUI();
+            }
         });
     }
     DestroyOtherBuildHereMenus() {

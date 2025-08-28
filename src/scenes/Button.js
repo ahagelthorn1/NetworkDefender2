@@ -8,7 +8,10 @@ export class Button extends Phaser.GameObjects.Sprite {
         this.BuildHere = BuildHere;
         if (this.type == 'Yes') {
             this.on('pointerdown', () => {
-                this.buildTurret();
+                if (this.scene.Gold.goldValue >= 50) {
+                    this.scene.Gold.changeGold(this.scene.Gold.goldValue - 50);
+                    this.buildTurret();
+                }
             });
         } else {
             this.on('pointerdown', () => {
