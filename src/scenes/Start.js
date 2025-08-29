@@ -68,7 +68,7 @@ export class Start extends Phaser.Scene {
         this.load.spritesheet('XPBar', 'assets/pngs/XPBar.png', {frameHeight:18, frameWidth:10});
         this.load.spritesheet('BeginWave', 'assets/pngs/BeginWave.png', {frameHeight:16, frameWidth:64});
         this.load.image('CardBackground', 'assets/pngs/CardBackground.png');
-        this.load.spritesheet('Card', 'assets/pngs/Card.png', {frameHeight:185, frameWidth:153});
+        this.load.spritesheet('Card', 'assets/pngs/Card.png', {frameHeight:186, frameWidth:153});
 
     }
     defineBuildSigns() {
@@ -346,61 +346,25 @@ export class Start extends Phaser.Scene {
     setXP(value) {
         this.XPBar.setXP(value);
     }
-    generateCards(names) {
-        let k = 0;
-        let out_arr = [];
-        let strin;
-        let tmp_card;
-        for (let i = 0; i < names.length; i++) {
-            for (let j = 0; j < 5; j++) {
-                strin = names[i] + j.toString();
-                tmp_card = new Card(this,500,350,'Card',j,names[i]);
-                tmp_card.anims.create({
-                    key: strin,
-                    frames: this.anims.generateFrameNumbers('Card', { start: k, end: k }),
-                    frameRate: 10,
-                    repeat: -1
-                });
-                tmp_card.play(strin);
-                out_arr.push(tmp_card);
-                k += 1;
-            }
-        }
-        return out_arr;
-    }
-    getByType(type) {
-        for (let i = 0; i < this.activeCards.length; i++) {
-            if (this.activeCards[i].type == type) {
-                return this.activeCards[i];
-            }
-        }
-    }
-    determineCardPool() {
-        let out_arr = [];
-        let active_types = [];
-        let tmp_card;
-        for (let i = 0; i < this.activeCards.length; i++) {
-            if (!active_types.includes(this.activeCards[i].type)) {
-                active_types.push(this.activeCards[i].type);
-            }
-        }
+    cardLookUp(name,level) {
         for (let i = 0; i < this.cards.length; i++) {
-            tmp_card=this.cards[i];
-            if (this.activeCards.length > 0) {
-                if (active_types.includes(tmp_card.type)) {
-                    if (tmp_card.level == this.getByType(tmp_card.type).level + 1) {
-                        out_arr.push(tmp_card);
-                    }
+            if (this.cards[i].name == name) {
+                if (this.cards[i].level == level) {
+                    return this.cards[i]
                 }
-            } else {
-                if (tmp_card.level == 0) {
-                    out_arr.push(tmp_card);
-                }
+            }
+        }
+    }
+    determinePossibleCards() {
+        let out_arr = [];
+        for (let i = 0; i < this.activeCards.length; i++) {
+            if(this.activeCards[i].level != 4) {
+                out_arr.push(this.cardLookUp(this.activeCards[i].name, this.activeCards[i].level + 1));
             }
         }
         return out_arr;
     }
-    getThreeRandomIndices(max) {
+    getThreeIndices(max) {
         const numbers = new Set();
         while (numbers.size < 3) {
             let num = Math.floor(Math.random() * (max + 1));
@@ -408,11 +372,51 @@ export class Start extends Phaser.Scene {
         }
         return [...numbers];
     }
-    chooseThreeCards() {
+    pickThreeCards() {
+        let possibleCards = this.determinePossibleCards();
+        let threeCards = [];
+        let indices = this.getThreeIndices(possibleCards.length-1);
+        threeCards = [possibleCards[indices[0]],possibleCards[indices[1]],possibleCards[indices[2]]]
+        return threeCards;
+    }
+    fadeToBlack() {
+        this.cardBackground = this.add.tileSprite(1280/2, 720 / 2, 1280,720, 'CardBackground');
+        this.cardBackground.setDepth(20);
+        this.cardBackground.setAlpha(.75);
+    }
+    generateCards(names) {
+        let k = 0;
         let out_arr = [];
-        let cardPool = this.determineCardPool();
-        let indices = this.getThreeRandomIndices(cardPool.length-1);
-        out_arr = [cardPool[indices[0]],cardPool[indices[1]],cardPool[indices[2]]];
+        let strin;
+        let tmp_card;
+        let card_shell;
+        for (let i = 0; i < names.length; i++) {
+            for (let j = 0; j < 5; j++) {
+                strin = names[i] + j.toString();
+                tmp_card = new Card(this,500,350,'Card',j,names[i]);
+                tmp_card.setInteractive();
+                tmp_card.anims.create({
+                    key: strin,
+                    frames: this.anims.generateFrameNumbers('Card', { start: k, end: k }),
+                    frameRate: 10,
+                    repeat: -1
+                });
+                tmp_card.play(strin);
+                if (j == 0) {
+                    card_shell = new Card(this,-100,-100,'Card',-1,names[i]);
+                    card_shell.anims.create({
+                        key: strin,
+                        frames: this.anims.generateFrameNumbers('Card', { start: k, end: k }),
+                        frameRate: 10,
+                        repeat: -1
+                    });
+                    card_shell.play(strin);
+                    this.activeCards.push(card_shell);
+                }
+                out_arr.push(tmp_card);
+                k += 1;
+            }
+        }
         return out_arr;
     }
     create() {
@@ -430,29 +434,42 @@ export class Start extends Phaser.Scene {
         this.generateMalwares(NUM_MALWARES);
         this.establishUI();
         this.levelUp = false;
-        let names = ['PenetrationTesting', 'Anti-Malware', 'Encryption', 'Anti-Virus', 'Secure Passwords'];
-        this.cards = this.generateCards(names);
+        this.names = ['PenetrationTesting','Anti-Malware','Encryption','Anti-Virus','SecurePasswords'];
+        this.cards = this.generateCards(this.names);
+    }
+    showThreeCards(three_cards) {
+        this.one = three_cards[0];
+        this.two = three_cards[1];
+        this.three = three_cards[2];
+        this.one.setInteractive();
+        this.one.visible = true;
+        this.one.x = 400;
+        this.two.setInteractive();
+        this.two.visible = true;
+        this.two.x = 700;
+        this.three.setInteractive();
+        this.three.visible = true;
+        this.three.x = 1000;
     }
     checkLevelUp() {
         if(this.levelUp) {
             this.levelUp = false;
             this.WaveBar.waveInProgress = false;
-            this.cardBackground = this.add.tileSprite(1280/2, 720 / 2, 1280,720, 'CardBackground');
-            this.cardBackground.setDepth(20);
-            this.cardBackground.setAlpha(.75);
-            let threeCards = this.chooseThreeCards();
-            let one = threeCards[0];
-            let two = threeCards[1];
-            let three = threeCards[2];
-            one.visible = true;
-            one.x = 400
-            two.visible = true;
-            two.x = 700
-            three.visible = true;
-            three.x = 1000
+            this.fadeToBlack();
+            let three_cards = this.pickThreeCards();
+            this.showThreeCards(three_cards);
         }
     }
-
+    closeCardMenu() {
+        this.cardBackground.destroy();
+        this.one.visible = false;
+        this.one.setInteractive(false);
+        this.two.visible = false;
+        this.two.setInteractive(false);
+        this.three.visible = false;
+        this.three.setInteractive(false);
+        this.WaveBar.waveInProgress = true;
+    }
     update(time, delta) {
         if (this.WaveBar.waveInProgress) {
             const speed = 50 * (delta / 1000);
