@@ -8,6 +8,7 @@ import { LevelBar } from './LevelBar.js';
 import { WaveBar } from './WaveBar.js';
 import { XPBar } from './XPBar.js';
 import { BeginWave } from './BeginWave.js';
+import { Card } from './Card.js';
 
 export class Start extends Phaser.Scene {
 
@@ -66,6 +67,8 @@ export class Start extends Phaser.Scene {
         this.load.spritesheet('WaveBar','assets/pngs/WaveBar.png',{frameHeight:32,frameWidth:144});
         this.load.spritesheet('XPBar', 'assets/pngs/XPBar.png', {frameHeight:18, frameWidth:10});
         this.load.spritesheet('BeginWave', 'assets/pngs/BeginWave.png', {frameHeight:16, frameWidth:64});
+        this.load.image('CardBackground', 'assets/pngs/CardBackground.png');
+        this.load.spritesheet('Card', 'assets/pngs/Card.png', {frameHeight:185, frameWidth:153});
 
     }
     defineBuildSigns() {
@@ -94,11 +97,22 @@ export class Start extends Phaser.Scene {
     }
     generateMalwares(NUM_MALWARES) {
         this.malwares = [];
-        let y_offset = 280;
-        let last_y = 720;
+        let y_offset = 150;
+        let last_l_y = 720;
+        let last_r_y = 720;
+        let tmp_malware;
         for (let i = 0; i < NUM_MALWARES; i++) {
-            let tmp_malware = new Malware(this, 280, last_y + y_offset, 'Malware');
-            last_y = last_y + y_offset;
+            if (i % 2 == 0) {
+                const x = 280
+                tmp_malware = new Malware(this, x, last_l_y + y_offset, 'Malware');
+                tmp_malware.type = "left";
+                last_l_y = last_l_y + y_offset;
+            } else {
+                const x = 1100;
+                tmp_malware = new Malware(this, x, last_r_y + y_offset, 'Malware');
+                tmp_malware.type = "right";
+                last_r_y = last_r_y + y_offset;
+            }
             this.malwares.push(tmp_malware);
             tmp_malware.changeDirection("UP");
             tmp_malware.scale = .5;
@@ -106,25 +120,7 @@ export class Start extends Phaser.Scene {
     }
     moveMalwares(speed) {
         for (let i = 0; i < this.malwares.length; i++) {
-            if (this.malwares[i].step1Done == false) {
-                this.malwares[i].step1(speed);
-            } else if (this.malwares[i].step2Done == false) {
-                this.malwares[i].step2(speed);
-            } else if (this.malwares[i].step3Done == false) {
-                this.malwares[i].step3(speed);
-            } else if (this.malwares[i].step4Done == false) {
-                this.malwares[i].step4(speed);
-            } else if (this.malwares[i].step5Done == false) {
-                this.malwares[i].step5(speed);
-            } else if (this.malwares[i].step6Done == false) {
-                this.malwares[i].step6(speed);
-            } else if (this.malwares[i].step7Done == false) {
-                this.malwares[i].step7(speed);
-            } else if (this.malwares[i].step8Done == false) {
-                this.malwares[i].step8(speed);
-            } else if (this.malwares[i].step9Done == false) {
-                this.malwares[i].step9(speed);
-            }
+            this.malwares[i].move(speed);
         }
     }
     makeObj(x, y, texture) {
@@ -350,7 +346,77 @@ export class Start extends Phaser.Scene {
     setXP(value) {
         this.XPBar.setXP(value);
     }
+    generateCards(names) {
+        let k = 0;
+        let out_arr = [];
+        let strin;
+        let tmp_card;
+        for (let i = 0; i < names.length; i++) {
+            for (let j = 0; j < 5; j++) {
+                strin = names[i] + j.toString();
+                tmp_card = new Card(this,500,350,'Card',j,names[i]);
+                tmp_card.anims.create({
+                    key: strin,
+                    frames: this.anims.generateFrameNumbers('Card', { start: k, end: k }),
+                    frameRate: 10,
+                    repeat: -1
+                });
+                tmp_card.play(strin);
+                out_arr.push(tmp_card);
+                k += 1;
+            }
+        }
+        return out_arr;
+    }
+    getByType(type) {
+        for (let i = 0; i < this.activeCards.length; i++) {
+            if (this.activeCards[i].type == type) {
+                return this.activeCards[i];
+            }
+        }
+    }
+    determineCardPool() {
+        let out_arr = [];
+        let active_types = [];
+        let tmp_card;
+        for (let i = 0; i < this.activeCards.length; i++) {
+            if (!active_types.includes(this.activeCards[i].type)) {
+                active_types.push(this.activeCards[i].type);
+            }
+        }
+        for (let i = 0; i < this.cards.length; i++) {
+            tmp_card=this.cards[i];
+            if (this.activeCards.length > 0) {
+                if (active_types.includes(tmp_card.type)) {
+                    if (tmp_card.level == this.getByType(tmp_card.type).level + 1) {
+                        out_arr.push(tmp_card);
+                    }
+                }
+            } else {
+                if (tmp_card.level == 0) {
+                    out_arr.push(tmp_card);
+                }
+            }
+        }
+        return out_arr;
+    }
+    getThreeRandomIndices(max) {
+        const numbers = new Set();
+        while (numbers.size < 3) {
+            let num = Math.floor(Math.random() * (max + 1));
+            numbers.add(num);
+        }
+        return [...numbers];
+    }
+    chooseThreeCards() {
+        let out_arr = [];
+        let cardPool = this.determineCardPool();
+        let indices = this.getThreeRandomIndices(cardPool.length-1);
+        out_arr = [cardPool[indices[0]],cardPool[indices[1]],cardPool[indices[2]]];
+        return out_arr;
+    }
     create() {
+        this.activeCards = [];
         const STARTING_GOLD = 120;
         const HouseX = 690;
         const HouseY = 205;
@@ -363,6 +429,28 @@ export class Start extends Phaser.Scene {
         this.BuildSigns = this.defineBuildSigns();
         this.generateMalwares(NUM_MALWARES);
         this.establishUI();
+        this.levelUp = false;
+        let names = ['PenetrationTesting', 'Anti-Malware', 'Encryption', 'Anti-Virus', 'Secure Passwords'];
+        this.cards = this.generateCards(names);
+    }
+    checkLevelUp() {
+        if(this.levelUp) {
+            this.levelUp = false;
+            this.WaveBar.waveInProgress = false;
+            this.cardBackground = this.add.tileSprite(1280/2, 720 / 2, 1280,720, 'CardBackground');
+            this.cardBackground.setDepth(20);
+            this.cardBackground.setAlpha(.75);
+            let threeCards = this.chooseThreeCards();
+            let one = threeCards[0];
+            let two = threeCards[1];
+            let three = threeCards[2];
+            one.visible = true;
+            one.x = 400
+            two.visible = true;
+            two.x = 700
+            three.visible = true;
+            three.x = 1000
+        }
     }
 
     update(time, delta) {
@@ -373,6 +461,7 @@ export class Start extends Phaser.Scene {
                 this.Turrets[i].update(time, this.malwares);
             }
         }
+        this.checkLevelUp();
     }
 
 }

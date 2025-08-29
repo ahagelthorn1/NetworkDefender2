@@ -85,6 +85,7 @@ export class XPBar extends Phaser.GameObjects.Sprite {
             this.play('ninety');
         } else {
             this.play('hundred');
+            this.scene.levelUp = true;
         }
     }
 }

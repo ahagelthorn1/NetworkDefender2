@@ -7,7 +7,7 @@ export class Arrow extends Phaser.GameObjects.Sprite {
         this.scale = .3;
         this.speed = speed;
         this.turret = turret;
-        this.damage = 25;
+        this.damage = 100;
         this.scene.physics.add.existing(this);
         this.scene.physics.add.overlap(this, this.target, () => {
             this.target.changeHealth(this.damage);
