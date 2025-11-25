@@ -18,6 +18,7 @@ export class Health extends Phaser.GameObjects.Sprite {
             this.text.setText("01");
         } else {
             this.text.setText("00");
+            this.scene.GameOver = true;
         }
     }
 }

@@ -420,6 +420,7 @@ export class Start extends Phaser.Scene {
         return out_arr;
     }
     create() {
+        this.cameras.main.fadeIn(1000, 0, 0, 0)
         this.activeCards = [];
         const STARTING_GOLD = 120;
         const HouseX = 690;
@@ -436,6 +437,8 @@ export class Start extends Phaser.Scene {
         this.levelUp = false;
         this.names = ['PenetrationTesting','Anti-Malware','Encryption','Anti-Virus','SecurePasswords'];
         this.cards = this.generateCards(this.names);
+        this.GameOver = false;
+        this.fadeStart = false;
     }
     showThreeCards(three_cards) {
         this.one = three_cards[0];
@@ -454,6 +457,8 @@ export class Start extends Phaser.Scene {
     checkLevelUp() {
         if(this.levelUp) {
             this.levelUp = false;
+            this.LevelBar.levelValue += 1;
+            this.LevelBar.upLevel();
             this.WaveBar.waveInProgress = false;
             this.fadeToBlack();
             let three_cards = this.pickThreeCards();
@@ -470,6 +475,17 @@ export class Start extends Phaser.Scene {
         this.three.setInteractive(false);
         this.WaveBar.waveInProgress = true;
     }
+    checkLossCondition() {
+        if (this.GameOver) {
+            if (!this.fadeStart) {
+                this.fadeStart = true;
+                this.cameras.main.fadeOut(1000, 0, 0, 0);
+                this.cameras.main.on('camerafadeoutcomplete', () => {
+                    this.scene.start('Start');
+                });
+            }
+        }
+    }
     update(time, delta) {
         if (this.WaveBar.waveInProgress) {
             const speed = 50 * (delta / 1000);
@@ -479,6 +495,7 @@ export class Start extends Phaser.Scene {
             }
         }
         this.checkLevelUp();
+        this.checkLossCondition();
     }
 
 }

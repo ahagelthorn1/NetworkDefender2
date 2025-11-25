@@ -8,4 +8,14 @@ export class LevelBar extends Phaser.GameObjects.Sprite {
             color: "#ffffff"
         });
     }
+    upLevel() {
+        let strin = "LVL.";
+        strin = strin + this.levelValue;
+        this.text.destroy();
+        this.text = this.scene.add.text(this.x-38, this.y-12, strin, {
+            fontFamily: "pixel",
+            fontSize: "20px",
+            color: "#ffffff"
+        });
+    }
 }
