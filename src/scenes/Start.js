@@ -420,7 +420,8 @@ export class Start extends Phaser.Scene {
         return out_arr;
     }
     create() {
-        this.cameras.main.fadeIn(1000, 0, 0, 0)
+        this.cameras.main.fadeIn(1000, 0, 0, 0);
+        this.FIRE_RATE_CONSTANT = 1000;
         this.activeCards = [];
         const STARTING_GOLD = 120;
         const HouseX = 690;
@@ -493,6 +494,7 @@ export class Start extends Phaser.Scene {
             for (let i = 0; i < this.Turrets.length; i++) {
                 this.Turrets[i].update(time, this.malwares);
             }
+            console.log(this.FIRE_RATE_CONSTANT);
         }
         this.checkLevelUp();
         this.checkLossCondition();

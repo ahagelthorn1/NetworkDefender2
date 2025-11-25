@@ -4,7 +4,7 @@ export class Turret extends Phaser.GameObjects.Sprite {
         super(scene, x, y, texture);
         scene.add.existing(this);
         this.range = 200;
-        this.fireRate = 1000;
+        this.fireRate = this.scene.FIRE_RATE_CONSTANT;
         this.speed = 300;
         this.lastFired = 0;
         this.arrows = [];

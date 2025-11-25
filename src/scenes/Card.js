@@ -13,6 +13,19 @@ export class Card extends Phaser.GameObjects.Sprite {
         });
     }
     addEffect() {
+        if (this.name == "PenetrationTesting") {
+            if (this.level == 1) {
+                this.scene.FIRE_RATE_CONSTANT = 2000;
+            } else if (this.level == 2) {
+                this.scene.FIRE_RATE_CONSTANT = 3000;
+            } else if (this.level == 3) {
+                this.scene.FIRE_RATE_CONSTANT = 4000;
+            } else if (this.level == 4) {
+                this.scene.FIRE_RATE_CONSTANT = 5000;
+            } else if (this.level == 5) {
+                this.scene.FIRE_RATE_CONSTANT = 10000;
+            }
+        }
         for(let i = 0; i < this.scene.activeCards.length; i++) {
             if (this.scene.activeCards[i].name == this.name) {
                 this.scene.activeCards[i].level = this.level;
