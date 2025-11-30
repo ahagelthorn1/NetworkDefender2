@@ -422,11 +422,12 @@ export class Start extends Phaser.Scene {
     create() {
         this.cameras.main.fadeIn(1000, 0, 0, 0);
         this.FIRE_RATE_CONSTANT = 1000;
+        this.ATTACK_SPEED_CONSTANT = 300;
         this.activeCards = [];
         const STARTING_GOLD = 120;
         const HouseX = 690;
         const HouseY = 205;
-        const NUM_MALWARES = 50;
+        const NUM_MALWARES = 150;
         this.setPieces = [];
         this.Map = this.add.tileSprite(1280 / 2, 720 / 2, 1280, 720, 'Map');
         this.InitializeStats(STARTING_GOLD);

@@ -5,7 +5,7 @@ export class Turret extends Phaser.GameObjects.Sprite {
         scene.add.existing(this);
         this.range = 200;
         this.fireRate = this.scene.FIRE_RATE_CONSTANT;
-        this.speed = 300;
+        this.speed = this.scene.ATTACK_SPEED_CONSTANT;
         this.lastFired = 0;
         this.arrows = [];
         if (!this.anims.exists('down')) {
@@ -115,6 +115,8 @@ export class Turret extends Phaser.GameObjects.Sprite {
         arrow.update();
     }
     update(time,enemies) {
+        this.fireRate = this.scene.FIRE_RATE_CONSTANT;
+        this.speed = this.scene.ATTACK_SPEED_CONSTANT;
         let target = null;
         let closestDist = this.range;
         for(let i = 0; i < enemies.length; i++) {
